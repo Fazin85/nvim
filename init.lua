@@ -19,11 +19,11 @@ Plug('stevearc/conform.nvim')
 vim.call('plug#end')
 
 require('conform').setup({
-	formatters_by_ft = {
-		lua = { "stylua" },
-		c = { "clang_format" },
-		cpp = { "clang_format" },
-	},
+    formatters_by_ft = {
+        lua = { "stylua" },
+        c = { "clang_format" },
+        cpp = { "clang_format" },
+    },
 })
 
 local builtin = require('telescope.builtin')
@@ -32,47 +32,53 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live gr
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
 vim.keymap.set('n', '<leader>f', function()
-	require('conform').format({ lsp_fallback = true })
+    require('conform').format({ lsp_fallback = true })
 end)
 
 require("mason").setup()
 require("mason-lspconfig").setup()
 
 vim.cmd.colorscheme('retrobox')
+vim.opt.number = true
+
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.softtabstop = 4
 
 local cmp = require('cmp')
 
 cmp.setup({
-	completion = {
-		autocomplete = { cmp.TriggerEvent.TextChanged },
-	},
+    completion = {
+        autocomplete = { cmp.TriggerEvent.TextChanged },
+    },
 
-	snippet = {
-		expand = function(args)
-			require('luasnip').lsp_expand(args.body)
-		end,
-	},
+    snippet = {
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
+    },
 
-	mapping = cmp.mapping.preset.insert({
-		['<C-Space>'] = cmp.mapping.complete(),
-		['<C-e>'] = cmp.mapping.abort(),
-		['<CR>'] = cmp.mapping.confirm({ select = true }),
-		['<Tab>'] = cmp.mapping.select_next_item(),
-		['<S-Tab>'] = cmp.mapping.select_prev_item(),
-	}),
+    mapping = cmp.mapping.preset.insert({
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<Tab>'] = cmp.mapping.select_next_item(),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    }),
 
-	sources = cmp.config.sources({
-		{ name = 'nvim_lsp' },
-		{ name = 'luasnip' },
-	}, {
-		{ name = 'buffer' },
-		{ name = 'path' },
-	}),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    }, {
+        { name = 'buffer' },
+        { name = 'path' },
+    }),
 })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require('lspconfig').clangd.setup({
-	cmd = { "/usr/bin/clangd" },
-	capabilities = capabilities,
+    cmd = { "/usr/bin/clangd" },
+    capabilities = capabilities,
 })
